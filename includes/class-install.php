@@ -1,5 +1,11 @@
 <?php
-class SecurityChecker_Install {
+namespace KWS\SecurityChecker;
+
+if (!defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
+
+class Install {
     public static function install() {
         self::create_tables();
         self::set_default_options();

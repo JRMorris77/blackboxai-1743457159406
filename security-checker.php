@@ -3,7 +3,7 @@
  * Plugin Name: KWS Security Checker
  * Description: Checks for security bulletins in installed themes/plugins and allows quarantining or updating.
  * Version: 1.0.0
- * Author: James Morris <jmorris[at]kissws[dot]com>
+ * Author: Your Name
  * Text Domain: kws-security-checker
  * Domain Path: /languages
  * Network: true
@@ -35,12 +35,20 @@ function security_checker_activate() {
         add_site_option('kws_security_checker_network_active', true);
     }
     require_once KWS_SECURITY_CHECKER_PLUGIN_DIR . 'includes/class-install.php';
-    KWS\SecurityChecker\Install::install();
+    if (class_exists('KWS\SecurityChecker\Install')) {
+        KWS\SecurityChecker\Install::install();
+    } else {
+        error_log('KWS Security Checker: Failed to load Install class during activation');
+    }
 }
 
 function security_checker_deactivate() {
     require_once KWS_SECURITY_CHECKER_PLUGIN_DIR . 'includes/class-install.php';
-    KWS\SecurityChecker\Install::uninstall();
+    if (class_exists('KWS\SecurityChecker\Install')) {
+        KWS\SecurityChecker\Install::uninstall();
+    } else {
+        error_log('KWS Security Checker: Failed to load Install class during deactivation');
+    }
 }
 
 // Load the main plugin class

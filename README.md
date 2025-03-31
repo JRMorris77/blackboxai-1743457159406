@@ -26,8 +26,7 @@ Full docs: [kissws.com/docs/kws-security-checker](https://kissws.com/docs/kws-se
 ### Support
 Contact: **James Morris**  
 K.I.S.S. Web Solutions  
-[Email](mailto:jmorris@kissws.com)
-[Website](https://kissws.com)
+[jmorris@kissws.com](mailto:jmorris@kissws.com)
 
 ### License
 GPLv2 - See [LICENSE](LICENSE)
