@@ -35,13 +35,13 @@ class SecurityChecker {
         $plugins = get_plugins();
         foreach ($plugins as $plugin_file => $plugin_data) {
             if ($this->has_security_update($plugin_file)) {
-            $items[] = [
-                'type' => 'plugin',
-                'file' => $plugin_file,
-                'name' => $plugin_data['Name'],
-                'version' => $plugin_data['Version'],
-                'sites' => $this->get_affected_sites($plugin_file, 'plugin')
-            ];
+                $items[] = [
+                    'type' => 'plugin',
+                    'file' => $plugin_file,
+                    'name' => $plugin_data['Name'],
+                    'version' => $plugin_data['Version'],
+                    'sites' => $this->get_affected_sites($plugin_file, 'plugin')
+                ];
             }
         }
 
@@ -63,9 +63,6 @@ class SecurityChecker {
     }
 
     private function has_security_update($item, $type = 'plugin') {
-        // This would be replaced with actual security bulletin checks
-        // For now, we'll simulate finding vulnerable items
-        // Simulated vulnerable items with translatable names
         $vulnerable_items = [
             'plugin' => [
                 'akismet/akismet.php' => __('Akismet Anti-Spam', 'kws-security-checker'),
@@ -146,9 +143,13 @@ class SecurityChecker {
         }
 
         if ($result) {
-            $quarantined = get_site_option('security_checker_quarantined_plugins', []);
+            $quarantined = is_multisite() 
+                ? get_site_option('security_checker_quarantined_plugins', [])
+                : get_option('security_checker_quarantined_plugins', []);
             $quarantined[$plugin_file] = time();
-            update_site_option('security_checker_quarantined_plugins', $quarantined);
+            is_multisite()
+                ? update_site_option('security_checker_quarantined_plugins', $quarantined)
+                : update_option('security_checker_quarantined_plugins', $quarantined);
         }
 
         return $result;
@@ -156,11 +157,13 @@ class SecurityChecker {
 
     private function quarantine_theme($theme_slug, $site_id = null) {
         // Implementation would switch themes to default before quarantining
-        // Similar structure to quarantine_plugin()
         return true;
     }
 
     public function get_vulnerabilities() {
+        if (version_compare(get_bloginfo('version'), '6.7', '>=')) {
+            return rest_ensure_response($this->vulnerable_items);
+        }
         return $this->vulnerable_items;
     }
 }

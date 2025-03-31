@@ -2,8 +2,10 @@
 /**
  * Plugin Name: KWS Security Checker
  * Description: Checks for security bulletins in installed themes/plugins and allows quarantining or updating.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: Your Name
+ * Requires at least: 6.0
+ * Tested up to: 6.7
  * Text Domain: kws-security-checker
  * Domain Path: /languages
  * Network: true
@@ -57,6 +59,12 @@ if (class_exists('KWS\SecurityChecker\SecurityChecker')) {
     KWS\SecurityChecker\SecurityChecker::init();
 } else {
     error_log('KWS Security Checker: Failed to load SecurityChecker class');
+}
+
+// Load REST API functionality
+if (version_compare(get_bloginfo('version'), '6.7', '>=')) {
+    require_once KWS_SECURITY_CHECKER_PLUGIN_DIR . 'includes/class-rest-api.php';
+    new \KWS\SecurityChecker\Rest_API();
 }
 
 // Load admin functionality

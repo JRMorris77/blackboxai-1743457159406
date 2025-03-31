@@ -18,6 +18,13 @@ class Install {
 
     private static function create_tables() {
         global $wpdb;
+        
+        // Use modern dbDelta format for WP 6.7+ compatibility
+        if (version_compare(get_bloginfo('version'), '6.7', '>=')) {
+            require_once ABSPATH . 'wp-admin/includes/schema.php';
+        } else {
+            require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+        }
 
         $charset_collate = $wpdb->get_charset_collate();
         $table_name = $wpdb->prefix . 'security_checker_logs';

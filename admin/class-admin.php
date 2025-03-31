@@ -43,11 +43,20 @@ class Admin {
             return;
         }
 
+        // Enqueue assets with version-specific dependencies
+        $style_deps = [];
+        $script_deps = ['jquery'];
+        
+        if (version_compare(get_bloginfo('version'), '6.7', '>=')) {
+            $style_deps = ['wp-components'];
+            $script_deps = ['jquery', 'wp-api-fetch'];
+        }
+
         // Enqueue Tailwind CSS
         wp_enqueue_style(
             'security-checker-tailwind',
             'https://cdn.tailwindcss.com',
-            [],
+            $style_deps,
             \KWS_SECURITY_CHECKER_VERSION
         );
 
@@ -79,10 +88,10 @@ class Admin {
     }
 
     public function render_dashboard() {
-        $security_checker = SecurityChecker::init();
+        $security_checker = \KWS\SecurityChecker\SecurityChecker::init();
         $vulnerabilities = $security_checker->get_vulnerabilities();
         
-        include SECURITY_CHECKER_PLUGIN_DIR . 'admin/views/dashboard.php';
+        include \KWS_SECURITY_CHECKER_PLUGIN_DIR . 'admin/views/dashboard.php';
     }
 
     public function handle_ajax_request() {
@@ -97,7 +106,7 @@ class Admin {
         $identifier = sanitize_text_field($_POST['item_identifier'] ?? '');
         $site_id = isset($_POST['site_id']) ? absint($_POST['site_id']) : null;
 
-        $security_checker = SecurityChecker::init();
+        $security_checker = \KWS\SecurityChecker\SecurityChecker::init();
         $result = false;
         $message = '';
 
