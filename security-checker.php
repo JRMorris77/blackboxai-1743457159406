@@ -3,7 +3,7 @@
  * Plugin Name: KWS Security Checker
  * Description: Checks for security bulletins in installed themes/plugins and allows quarantining or updating.
  * Version: 1.0.0
- * Author: Your Name
+ * Author: James Morris <jmorris[at]kissws[dot]com>
  * Text Domain: kws-security-checker
  * Domain Path: /languages
  * Network: true
